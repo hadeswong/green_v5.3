@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>綠綠賞卡片</title>
+    <link rel="stylesheet" href="card.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- iOS specific meta tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="會員卡_v5.1">
+    <meta name="format-detection" content="telephone=no">
+   <!-- iOS icons -->
+    <link rel="apple-touch-icon" sizes="152x152" href="icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="icon.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="icon.png">
+    
+    <!-- QR Code 生成库 -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header-container">
+            <h1>綠綠賞會員卡</h1>
+             <!-- 臨時  <div class="filter-icons">
+                <div class="filter-icon active" data-filter="all" title="全部">
+                    <i class="fas fa-th"></i>
+                </div>
+                <div class="filter-icon" data-filter="phone" title="電話卡">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <div class="filter-icon" data-filter="physical" title="實體卡">
+                    <i class="fas fa-address-card"></i>
+                </div>
+                <div class="filter-icon" data-filter="physical2" title="實體卡2">
+                    <i class="fas fa-address-card"></i>
+                </div>
+                <div class="filter-icon" data-filter="physical3" title="新實體卡">
+                    <i class="fas fa-address-card"></i>
+                </div>
+            </div> -->
+        </div>
+        <div class="cards-container"></div>
+    </div>
+    
+    <script>
+        // 卡片数据
+        const cardData = [
+            { memberId: "4506358841", cardType: "電話:69223825" },
+            { memberId: "0362016724", cardType: "電話:46404014" },
+            { memberId: "0441236134", cardType: "電話:62352594" },
+            { memberId: "8855917996", cardType: "電話:54880501" },
+            { memberId: "6186573189", cardType: "電話:91425065" },
+            { memberId: "7332000034", cardType: "實體卡" },
+            { memberId: "4465040440", cardType: "實體卡" },
+            { memberId: "6346719346", cardType: "實體卡" },
+            { memberId: "6927101514", cardType: "實體卡" },
+            { memberId: "7980949805", cardType: "實體卡" },
+            { memberId: "5578019597", cardType: "實體卡" },
+            { memberId: "6133919598", cardType: "實體卡" },
+            { memberId: "7164719599", cardType: "實體卡" },
+            { memberId: "2971014939", cardType: "實體卡" },
+            { memberId: "3046811277", cardType: "實體卡" },
+            { memberId: "2890817845", cardType: "實體卡" },
+            { memberId: "4324119595", cardType: "實體卡" },
+            { memberId: "9321519600", cardType: "實體卡" },
+            { memberId: "9461819601", cardType: "實體卡" },
+            { memberId: "8728315324", cardType: "實體卡2" },
+            { memberId: "6289813107", cardType: "實體卡2" },
+            { memberId: "5525211475", cardType: "實體卡2" },
+            { memberId: "2601701976", cardType: "實體卡2" },
+            { memberId: "7174002029", cardType: "實體卡2" },
+            { memberId: "3610417166", cardType: "實體卡2" },
+            { memberId: "3213017689", cardType: "實體卡2" },
+            { memberId: "4744417874", cardType: "實體卡2" },
+            { memberId: "1427719111", cardType: "新實體卡" },
+            { memberId: "1753219178", cardType: "新實體卡" },
+            { memberId: "2914202237", cardType: "新實體卡" },
+            { memberId: "2974819128", cardType: "新實體卡" },
+            { memberId: "3383219592", cardType: "新實體卡" },
+            { memberId: "4372819179", cardType: "新實體卡" },
+            { memberId: "4423519949", cardType: "新實體卡" },
+            { memberId: "4454419594", cardType: "新實體卡" },
+            { memberId: "6316519850", cardType: "新實體卡" },
+            { memberId: "6385219127", cardType: "新實體卡" },
+            { memberId: "6674919593", cardType: "新實體卡" },
+            { memberId: "8684519989", cardType: "新實體卡" },
+            { memberId: "9696219126", cardType: "新實體卡" },
+            
+            { memberId: "1128602825", cardType: "舊卡" },
+            { memberId: "2565600346", cardType: "舊卡" },
+            { memberId: "3380902938", cardType: "舊卡" },
+            { memberId: "4838107366", cardType: "舊卡" },
+            { memberId: "5819002015", cardType: "舊卡" },
+            { memberId: "6025802669", cardType: "舊卡" },
+            { memberId: "8264001601", cardType: "舊卡" },
+            { memberId: "9868601367", cardType: "舊卡" },
+            { memberId: "6346719301", cardType: "新卡" },
+            { memberId: "6346719302", cardType: "新卡" },
+            { memberId: "6346719303", cardType: "新卡" },
+            { memberId: "6346719304", cardType: "新卡" },
+            { memberId: "6346719305", cardType: "新卡" },
+            { memberId: "2496719700", cardType: "新卡" },
+            { memberId: "8420119701", cardType: "新卡" },
+            { memberId: "8760602277", cardType: "新卡" },
+            { memberId: "9066719704", cardType: "新卡" },
+            { memberId: "9586019702", cardType: "新卡" },
+            { memberId: "9674619703", cardType: "新卡" },
+            { memberId: "6359219689", cardType: "新卡1" },
+            { memberId: "6613619690", cardType: "新卡1" },
+            { memberId: "1269519691", cardType: "新卡1" },
+            { memberId: "1949719692", cardType: "新卡1" },
+            { memberId: "9865219693", cardType: "新卡1" },
+            { memberId: "4211119694", cardType: "新卡1" },
+            { memberId: "9840419695", cardType: "新卡1" },
+            { memberId: "9812319696", cardType: "新卡1" },
+            { memberId: "4033019697", cardType: "新卡1" },
+            { memberId: "8200119698", cardType: "新卡1" },
+            { memberId: "3189819699", cardType: "新卡1" },
+            { memberId: "1496800851", cardType: "新卡2" },
+
+            { memberId: "6508019941", cardType: "新卡3" },
+            { memberId: "4579019168", cardType: "新卡3" },
+            { memberId: "8677619619", cardType: "新卡3" },
+            { memberId: "9674719851", cardType: "新卡3" },
+            { memberId: "2957619936", cardType: "新卡3" },
+            { memberId: "5489919688", cardType: "新卡3" },
+        ];
+        
+        const baseUrl = 'https://www.wastereduction.gov.hk/tc/pilot_smart_recycling_system.htm?card=';
+        
+        // 生成QR Code的函数
+        function generateQRCode(memberId) {
+            const url = baseUrl + memberId;
+            // 直接使用在线QR Code生成服务
+            return `https://api.qrserver.com/v1/create-qr-code/?size=128x128&data=${encodeURIComponent(url)}`;
+        }
+    
+        function generateCard(memberId, cardType) {
+            const qrCodeSrc = generateQRCode(memberId);
+            return `
+                <div class="card-container">
+                    <div class="member-header" data-member-id="${memberId}">
+                        <div class="member-id">編號：${memberId}</div>
+                        <div class="alert">未完成廚餘回收</div>
+                    </div>
+                    <div class="card-content-wrapper">
+                        <div class="green-card-container">
+                            <div class="card-type">${cardType}</div>
+                            <div class="qrcode-container">
+                                <img src="${qrCodeSrc}" alt="QR Code" style="width: 150px; height: 150px;">
+                            </div>
+                            <div class="recycle-info">
+                                <h2>廚餘回收</h2>
+                                <label class="switch">
+                                    <input type="checkbox" class="recycleCheck">
+                                    <span class="slider"></span>
+                                </label>
+                                <h2>取禮卷</h2>
+                                <label class="switch">
+                                    <input type="checkbox" class="giftCheck">
+                                    <span class="slider"></span>
+                                </label>
+                                 <h2>已轉電話</h2>
+                                <label class="switch">
+                                    <input type="checkbox" class="phoneCheck">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            const cardsContainer = document.querySelector('.cards-container');
+            
+            // 清空现有内容
+            cardsContainer.innerHTML = '';
+    
+            // 生成所有卡片
+            let lastCardType = '';
+            cardData.forEach((card, index) => {
+                // 获取卡片的基本类型（电话卡、实体卡或实体卡2）
+               const currentType = card.cardType.startsWith('電話') ? '電話卡'
+                    : card.cardType.startsWith('臨時')? '臨時卡'
+                    : card.cardType;
+                
+                // 如果当前卡片类型与上一个不同，且不是第一个卡片，添加分隔线
+                if (lastCardType !== '' && currentType !== lastCardType) {
+                    cardsContainer.innerHTML += `<hr style="border-color:#f00; width: 99%; height: 0px; margin: 5px 0;">`;
+                }
+                
+                const cardHTML = generateCard(card.memberId, card.cardType);
+                cardsContainer.innerHTML += cardHTML;
+                lastCardType = currentType;
+            });
+        });
+    </script>
+    <script src="CardManager.js"></script>
+</body>
+</html>
