@@ -236,8 +236,8 @@ h1 {
     object-fit: contain;
 }
 
-/* 回收信息 */
-.recycle-info {
+/* 禮卷／電話開關區 */
+.card-checks {
     flex: 0 0 auto;
     display: flex;
     flex-direction: column;
@@ -247,7 +247,7 @@ h1 {
     padding: 10px;
 }
 
-.recycle-info h2 {
+.card-checks h2 {
     margin: 0;
     font-size: 20px;
     color: #333;

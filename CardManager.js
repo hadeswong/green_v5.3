@@ -13,7 +13,6 @@ class CardManager {
         this.showAllCards();
         this.initializeFilters();
         this.initializeCards();
-        this.setupAutoReset();
     }
 
     initializeFilters() {
@@ -66,7 +65,6 @@ class CardManager {
         this.cards.forEach((cardContainer) => {
             const header = cardContainer.querySelector('.member-header');
             const contentWrapper = cardContainer.querySelector('.card-content-wrapper');
-            const recycleCheck = cardContainer.querySelector('.recycleCheck');
             const alert = cardContainer.querySelector('.alert');
             const greenCard = cardContainer.querySelector('.green-card-container');
             const memberId = header.getAttribute('data-member-id');
@@ -98,30 +96,24 @@ class CardManager {
             const giftCheck = cardContainer.querySelector('.giftCheck');
             const phoneCheck = cardContainer.querySelector('.phoneCheck');
 
-            recycleCheck.addEventListener('change', (e) => {
-                e.stopPropagation(); // 防止觸發卡片的點擊事件
-                this.updateCardStatus(recycleCheck.checked, alert, greenCard, giftCheck, phoneCheck);
-                this.saveCardStatus(memberId, recycleCheck.checked);
-            });
-
             giftCheck.addEventListener('change', (e) => {
                 e.stopPropagation(); // 防止觸發卡片的點擊事件
-                this.updateCardStatus(recycleCheck.checked, alert, greenCard, giftCheck, phoneCheck);
+                this.updateCardStatus(alert, greenCard, giftCheck, phoneCheck);
                 this.saveGiftStatus(memberId, giftCheck.checked);
             });
 
             phoneCheck.addEventListener('change', (e) => {
                 e.stopPropagation();
-                this.updateCardStatus(recycleCheck.checked, alert, greenCard, giftCheck, phoneCheck);
+                this.updateCardStatus(alert, greenCard, giftCheck, phoneCheck);
                 this.savePhoneStatus(memberId, phoneCheck.checked);
             });
 
-            this.initializeCardStatus(memberId, recycleCheck, alert, greenCard, giftCheck, phoneCheck);
+            this.initializeCardStatus(alert, greenCard, giftCheck, phoneCheck);
         });
     }
 
-    // 更新卡片是否完成廚餘回收
-    updateCardStatus(isChecked, alert, greenCard, giftCheck = null, phoneCheck = null) {
+    // 依取禮卷／已轉電話更新標題列與綠卡樣式
+    updateCardStatus(alert, greenCard, giftCheck = null, phoneCheck = null) {
         const header = alert.closest('.member-header');
         
         // 如果取禮卷開關被打開，更新名稱為"可以取5千禮卷"並添加淺藍色背景
@@ -144,24 +136,9 @@ class CardManager {
         }
 
         header.classList.remove('phone-handoff');
-
-        // 否則根據廚餘回收狀態更新
-        if (isChecked) {
-            alert.textContent = '✅ 已完成廚餘回收';
-            header.classList.add('completed');
-            greenCard.classList.add('completed');
-        } else {
-            alert.textContent = '❌ 未完成廚餘回收';
-            header.classList.remove('completed');
-            greenCard.classList.remove('completed');
-        }
-    }
-
-    // 保存卡片狀態
-    saveCardStatus(memberId, status) {
-        const today = new Date().toLocaleDateString();
-        localStorage.setItem(`recycleStatus-${memberId}`, status);
-        localStorage.setItem(`recycleDate-${memberId}`, today);
+        alert.textContent = '仲未轉到手機';
+        header.classList.remove('completed');
+        greenCard.classList.remove('completed');
     }
 
     // 保存禮卷狀態（不需要時間重置）
@@ -174,13 +151,9 @@ class CardManager {
         localStorage.setItem(`phoneStatus-${memberId}`, status);
     }
 
-    // 初始化卡片狀態
-    initializeCardStatus(memberId, recycleCheck, alert, greenCard, giftCheck = null, phoneCheck = null) {
-        const today = new Date().toLocaleDateString();
-        const savedDate = localStorage.getItem(`recycleDate-${memberId}`);
-        const savedStatus = localStorage.getItem(`recycleStatus-${memberId}`);
-
-        // 初始化禮卷狀態（不需要時間重置）
+    // 初始化卡片狀態（禮卷／電話僅從 localStorage 還原）
+    initializeCardStatus(alert, greenCard, giftCheck = null, phoneCheck = null) {
+        const memberId = alert.closest('.member-header').getAttribute('data-member-id');
         if (giftCheck) {
             const savedGiftStatus = localStorage.getItem(`giftStatus-${memberId}`);
             if (savedGiftStatus === 'true') {
@@ -195,46 +168,7 @@ class CardManager {
             }
         }
 
-        if (savedDate !== today) {
-            recycleCheck.checked = false;
-            this.updateCardStatus(false, alert, greenCard, giftCheck, phoneCheck);
-            this.saveCardStatus(memberId, false);
-        } else {
-            const status = savedStatus === 'true';
-            recycleCheck.checked = status;
-            this.updateCardStatus(status, alert, greenCard, giftCheck, phoneCheck);
-        }
-    }
-
-    // 重置所有卡片
-    resetAllCards() {
-        this.cards.forEach((card) => {
-            const memberId = card.querySelector('.member-header').getAttribute('data-member-id');
-            const recycleCheck = card.querySelector('.recycleCheck');
-            const alert = card.querySelector('.alert');
-            const greenCard = card.querySelector('.green-card-container');
-            const giftCheck = card.querySelector('.giftCheck');
-            const phoneCheck = card.querySelector('.phoneCheck');
-
-            recycleCheck.checked = false;
-            this.updateCardStatus(false, alert, greenCard, giftCheck, phoneCheck);
-            this.saveCardStatus(memberId, false);
-        });
-    }
-
-    // 設置時間自動重置
-    setupAutoReset() {
-        const checkDate = () => {
-            const today = new Date().toLocaleDateString();
-            const lastResetDate = localStorage.getItem('lastResetDate');
-            
-            if (lastResetDate !== today) {
-                this.resetAllCards();
-                localStorage.setItem('lastResetDate', today);
-            }
-        };
-        checkDate();
-        setInterval(checkDate, 60000);
+        this.updateCardStatus(alert, greenCard, giftCheck, phoneCheck);
     }
 }
 
