@@ -48,10 +48,6 @@ class CardManager {
                     card.style.display = 'block';
                 } else if (filter === 'physical' && cardType === '實體卡') {
                     card.style.display = 'block';
-                } else if (filter === 'physical2' && cardType === '實體卡2') {
-                    card.style.display = 'block';
-                } else if (filter === 'physical3' && cardType === '新實體卡') {
-                    card.style.display = 'block';
                 }
                 // 隐藏所有分隔线
                 document.querySelectorAll('hr').forEach(hr => {
@@ -118,7 +114,7 @@ class CardManager {
         
         // 如果取禮卷開關被打開，更新名稱為"可以取5千禮卷"並添加淺藍色背景
         if (giftCheck && giftCheck.checked) {
-            alert.textContent = '✅ 可以取5千禮卷';
+            alert.textContent = '✅ 可取禮卷';
             header.classList.add('gift');
             header.classList.remove('phone-handoff');
             return;
@@ -128,7 +124,7 @@ class CardManager {
         header.classList.remove('gift');
         
         if (phoneCheck && phoneCheck.checked) {
-            alert.textContent = '已轉用手機';
+            alert.textContent = '已轉手機';
             header.classList.remove('completed');
             header.classList.add('phone-handoff');
             greenCard.classList.remove('completed');
@@ -136,7 +132,7 @@ class CardManager {
         }
 
         header.classList.remove('phone-handoff');
-        alert.textContent = '仲未轉到手機';
+        alert.textContent = '未轉手機';
         header.classList.remove('completed');
         greenCard.classList.remove('completed');
     }
